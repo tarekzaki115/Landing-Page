@@ -49,12 +49,24 @@ function addSectionsToNavMenu() {
         let item = document.createElement('li');
 
         //write the html for the list item
-        item.innerHTML = `<a class='menu__link' href='#${sectionItemId}'>${sectionItemName}</a>`;
+        item.innerHTML = `<a class='menu__link' id='item${i+1}'>${sectionItemName}</a>`;
 
         //append the item to the nav bar
         navMenu.appendChild(item);
 
+        //scrolling to section on clicking the item on navbar
+        scrollToSection(item, sectionItem);
     }
+
+}
+
+// the function scrolls to section on clicking item on navbar
+// it takes the item and the section as input
+function scrollToSection(item, sec){
+    item.addEventListener('click', function(e){
+          e.preventDefault();
+          sec.scrollIntoView({behavior: "smooth"})
+    })
 }
 
 
@@ -64,28 +76,44 @@ function setActiveSection() {
     //will be used to store the id of the viewd section
     let viewedSection = '';
 
+    //the number of the id of the listItem
+    let itemNum = 1;
     //loop through the sections
     allSections.forEach(section => {
 
-        //the offset top of the section
-        const secTop = section.offsetTop;
-        //the height
-        const secHeight = section.clientHeight;
-        //preemptivly remove the "your-active-class" if it is there
-        section.classList.remove("your-active-class");
-        if (scrollY >= (secTop - secHeight / 2)) {
+
+        
+        //get the dimensions of the section to determine if it is in view
+        let dim = section.getBoundingClientRect();
+
+        //string that has the id of the listItem
+        let itemID = 'item'+itemNum;
+
+        //get the item by its ID
+        let item = document.getElementById(itemID);
+
+        //check if section is in viewport or not
+        if (dim.top <= 150 && dim.bottom >= 150) {
 
             //get the id of the viewed section
             viewedSection = section.getAttribute('id');
+
             //if viewed section doesn't have class "your-active-class" then add it
             if (!section.classList.contains('your-active-class')) {
                 document.getElementById(viewedSection).className = "your-active-class";
+                //add active class to the item
+                item.classList.add("active");
             }
 
         } else {
             //if the section is not viewed remove class "your-active-class"
             section.classList.remove("your-active-class");
+            //if the section is not viewed remove class "active"
+            item.classList.remove("active");
         }
+
+        //increment the number of the list id
+        itemNum++;
     });
 }
 

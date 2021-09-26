@@ -10,11 +10,9 @@
 
 
 /* ---- Base Rules ---- */
-
-html{
-    scroll-behavior: smooth;
+.active{
+    background-color: #333;
 }
-
 
 body {
     background: rgb(136,203,171);
